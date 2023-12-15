@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+BNG Trooper - Other project open
+{% endblock %}
+
+{% block toolbar %}
+{% endblock %}
+
+
+{% block content %}
+<div class="w3-container w3-margin">
+	<div class="w3-container w3-red w3-round w3-padding w3-margin" style="width: 800px;">
+		<h2>Currrently, the following project is open: <a href="/projects/{{ project.id }}">{{ project.name }}</a>. Please close it before opening another one.</h2>
+	</div>
+</div>
+{% endblock %}

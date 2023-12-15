@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}
+BNG Trooper - {{ project.name }}
+{% endblock %}
+
+{% block toolbar %}
+<!-- Upper Bar for selecting the current vies -->
+	<div class="w3-bar-item bng-cursor content-toggle w3-green" id="page-interfaces" onclick="changePage('interfaces')">Interfaces</div>
+	<div class="w3-bar-item bng-cursor content-toggle" id="page-streams" onclick="changePage('streams')">Streams</div>
+	<div class="w3-bar-item bng-cursor content-toggle" id="page-control" onclick="changePage('control')">Control</div>
+	<div class="w3-bar-item bng-cursor content-toggle" id="page-output" onclick="changePage('output')">Output</div>
+	<div class="w3-bar-item bng-cursor content-toggle" id="page-options" onclick="changePage('options')">Options</div>
+{% endblock %}
+
+
+{% block content %}
+	<div class="w3-container">
+		<!-- In this Section, we want to do the interface declaration -->
+
+		<div class="w3-container content-container" id="interfaces">
+			<div class="w3-container">
+				<h2>Create and manipulate Interfaces</h2>
+			</div>
+			<div class="w3-container" id="interface-list"></div>
+			<div id="new-interface" class="w3-modal" style="display: none;"></div>
+			<button class="w3-button w3-green w3-margin-top" onclick="showAddInterface()">Add Interface</button>
+		</div>
+
+		<div id="streams" class="w3-container content-container w3-hide">
+			<div class="w3-container">
+				<h2>Create and manipulate Streams</h2>
+			</div>
+			<div class="w3-container" id="stream-list"></div>
+			<div id="new-stream-attribute" class="w3-modal" style="display: none;"></div>
+			<div id="new-stream" class="w3-modal" style="display: none;">
+				<div class="w3-modal-content w3-padding w3-round">
+					<h2>Add new Stream to project</h2>
+					Please supply a desciptive name for the new stream:<br>
+					<input type="text" class="w3-input" id="new-stream-name"><br>
+					<button class="w3-button w3-green" onclick="addNewStream()">Add new Stream</button>
+					<button class="w3-button" onclick="hideAddStream()">Cancel</button>
+				</div>
+			</div>
+			<div id="delete-stream" class="w3-modal" style="display: none;">
+				<div class="w3-modal-content w3-padding w3-round">
+					<h2>Delete?</h2>
+					Do you really want to delete the stream? This cannot be undone.<br>
+					<button class="w3-button w3-green" onclick="removeStream()">Delete</button>
+					<button class="w3-button" onclick="hideDeleteStream()">Cancel</button>
+				</div>
+			</div>
+			<button class="w3-button w3-green w3-margin-top" onclick="showAddStream()">Add Stream</button>
+		</div>
+
+		<div id="control" class="content-container w3-hide">
+			<div class="w3-container knobs">
+				<h2>Control the BNGBlaster from here</h2>
+				<div class="w3-container" id="control-buttons"></div>
+			</div>
+			<div class="w3-container" id="blaster-output"></div>
+			<div class="w3-container server">
+				<h2>Server Metrics</h2>
+				<div id="healthcheck-result" class="w3-container">Currently no metrics querried</div>
+				<button class="w3-button w3-light-green w3-margin-top" onclick="doHealthCheck()">Check Server</button>
+			</div>
+			<div id="download-server" class="w3-modal" style="display: none;"></div>
+		</div>
+
+		<div id="output" class="w3-container w3-hide content-container">
+			<div class="w3-container">
+				<h2>JSON Formatted Output for this project</h2>
+			</div>
+			<textarea id="formatted-json" style="width: 600px; height: 400px;"></textarea><br>
+			<button class="w3-button w3-green" onclick="generateTextVersion()">Generate JSON Text File</button>
+		</div>
+
+		<div id="options" class="w3-container w3-hide content-container">
+			<div class="w3-container">
+				<h2>Project Options</h2>
+			</div>
+			<div class="w3-container" id="options-field"></div>
+			<div id="close-project" class="w3-modal" style="display: none;">
+				<div class="w3-modal-content w3-padding w3-round">
+					<h2>Close?</h2>
+					Do you really want to close the project? Any unsaved Changes will be lost.<br>
+					<button class="w3-button w3-green" onclick="doCloseProject()">Close</button>
+					<button class="w3-button" onclick="hideCloseProject()">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="error-list" class="w3-container" style="width: 500px; position: fixed; right: 5px; bottom: 5px;"></div>
+	<script>let project_id = "{{ project.id }}";</script>
+	<script src="/static/base.js"></script>
+{% endblock %}

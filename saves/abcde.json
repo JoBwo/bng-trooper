@@ -1,0 +1,24 @@
+{
+    "interfaces": {
+        "network": [
+            {
+                "interface": "eth1",
+                "address": "100.0.0.10/30",
+                "gateway": "100.0.0.9",
+                "ipv6-router-advertisement": false
+            }
+        ]
+    },
+    "streams": [
+        {
+            "name": "Best Effort",
+            "type": "ipv4",
+            "ipv4-df": true,
+            "pps": 100,
+            "destination-ipv4-address": "172.16.0.1",
+            "length": 2000,
+            "priority": 128,
+            "destination-port": 53
+        }
+    ]
+}

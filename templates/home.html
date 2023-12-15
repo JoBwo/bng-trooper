@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+BNG Trooper
+{% endblock %}
+
+{% block toolbar %}
+{% endblock %}
+
+
+{% block content %}
+<div class="w3-container w3-margin">
+	<div class="w3-container w3-round w3-padding w3-margin">
+		<h2>Welcome to BNG Trooper</h2>
+		Below are all currently available projects. Please note, that only one project can be open at any time. If you want to open another project, you have to first close the currently open project.
+	</div>
+	<div class="w3-container w3-margin">
+		<button class="w3-button w3-green w3-margin" onclick="window.location.href = '/create'">Create New Project</button>
+		<table class="w3-table-all" style="width: 800px">
+			<tr>
+				<th>Project Name</th>
+				<th>Currently Open?</th>
+				<th>Currently Running?</th>
+			</tr>
+			{% for project in projects %}
+				<tr>
+					<td><a href="/projects/{{ project.id }}">{{ project.name }}</a></td>
+					<td><div class="w3-tag w3-round {{ "w3-pale-blue" if project.open else "w3-light-gray"}}" style="width: auto;">{{ "Yes" if project.open else "No"}}</div></td>
+					<td><div class="w3-tag w3-round {{ "w3-pale-blue" if project.running else "w3-light-gray"}}" style="width: auto;">{{ "Yes" if project.running else "No"}}</div></td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+{% endblock %}

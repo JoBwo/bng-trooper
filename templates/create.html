@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+BNG Trooper - Create
+{% endblock %}
+
+{% block toolbar %}
+{% endblock %}
+
+
+{% block content %}
+<div class="w3-container w3-margin">
+	<div class="w3-container w3-round w3-padding w3-margin" style="width: 800px;">
+		<h2>Create</h2>
+		If you want to create a new project, please enter the Name for the new Project (Please note, that duplicate names are possible, so be careful when choosing one).
+		<input type="text" class="w3-input w3-margin-top" id="new-name"><br>
+		<button class="w3-button w3-green w3-margin-top" onclick="createProject()">Create</button>
+	</div>
+</div>
+<div id="error-list" class="w3-container" style="width: 500px; position: fixed; right: 5px; bottom: 5px;"></div>
+<script>
+	DIV_ERROR_LIST = document.getElementById("error-list");
+	let api = "/api/";
+
+	function createProjectResult(response){
+		if(response != "ERROR"){
+			window.location.href = "/projects/" + response
+		}else{
+			placeMessage("Error", "The server encountered an error. Please reload the page.");
+		}
+	}
+	
+	function createProject(){
+		// This Function checks, if the name field is empty and then creates a new project.
+
+		name = document.getElementById("new-name").value
+
+		if(name == ""){
+			placeMessage("Error", "The name field is empty. Please provide a meaningful name for the project");
+			return;
+		}
+
+		fetch(api + "project", {
+		    method: 'POST',
+		    body: getFormData({mode: "create", name: name})
+		})
+		   .then(response => response.text())
+		   .then(response => createProjectResult(response))
+	}
+
+</script>
+{% endblock %}
