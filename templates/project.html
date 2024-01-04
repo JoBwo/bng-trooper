@@ -7,6 +7,7 @@ BNG Trooper - {{ project.name }}
 {% block toolbar %}
 <!-- Upper Bar for selecting the current vies -->
 	<div class="w3-bar-item bng-cursor content-toggle w3-green" id="page-interfaces" onclick="changePage('interfaces')">Interfaces</div>
+	<div class="w3-bar-item bng-cursor content-toggle" id="page-access" onclick="changePage('access')">Access Protocols</div>
 	<div class="w3-bar-item bng-cursor content-toggle" id="page-streams" onclick="changePage('streams')">Streams</div>
 	<div class="w3-bar-item bng-cursor content-toggle" id="page-control" onclick="changePage('control')">Control</div>
 	<div class="w3-bar-item bng-cursor content-toggle" id="page-output" onclick="changePage('output')">Output</div>
@@ -20,11 +21,29 @@ BNG Trooper - {{ project.name }}
 
 		<div class="w3-container content-container" id="interfaces">
 			<div class="w3-container">
-				<h2>Create and manipulate Interfaces</h2>
+				<h2>Create and manipulate Network Interfaces</h2>
 			</div>
 			<div class="w3-container" id="interface-list"></div>
 			<div id="new-interface" class="w3-modal" style="display: none;"></div>
 			<button class="w3-button w3-green w3-margin-top" onclick="showAddInterface()">Add Interface</button>
+		</div>
+
+		<div class="w3-container content-container w3-hide" id="access">
+			<div class="w3-container">
+				<h2>Define how Access Protocols are being used</h2>
+			</div>
+			<div class="w3-container" id="access-list"></div>
+			<div id="new-access" class="w3-modal" style="display: none;">
+				<div class="w3-modal-content w3-padding w3-round w3-animate-top">
+					<h2>Adding a new Interface for Access Protocols</h2>
+					Please choose from the available options for creating a new Access Protocol Interface.
+					<div id="access-selects" class="w3-padding"></div>
+					<button class="w3-button w3-green" onclick="addAccess()">Add Interface</button>
+					<button class="w3-button" onclick="hideAddAccess()">Cancel</button>
+				</div>
+			</div>
+			<div id="access-templates" class="w3-modal" style="display: none;"></div>
+			<button class="w3-button w3-green w3-margin-top" onclick="showAddAccess()">Add Interface for Access Protocol</button>
 		</div>
 
 		<div id="streams" class="w3-container content-container w3-hide">
@@ -34,7 +53,7 @@ BNG Trooper - {{ project.name }}
 			<div class="w3-container" id="stream-list"></div>
 			<div id="new-stream-attribute" class="w3-modal" style="display: none;"></div>
 			<div id="new-stream" class="w3-modal" style="display: none;">
-				<div class="w3-modal-content w3-padding w3-round">
+				<div class="w3-modal-content w3-padding w3-round w3-animate-top">
 					<h2>Add new Stream to project</h2>
 					Please supply a desciptive name for the new stream:<br>
 					<input type="text" class="w3-input" id="new-stream-name"><br>
@@ -43,7 +62,7 @@ BNG Trooper - {{ project.name }}
 				</div>
 			</div>
 			<div id="delete-stream" class="w3-modal" style="display: none;">
-				<div class="w3-modal-content w3-padding w3-round">
+				<div class="w3-modal-content w3-padding w3-round w3-animate-top">
 					<h2>Delete?</h2>
 					Do you really want to delete the stream? This cannot be undone.<br>
 					<button class="w3-button w3-green" onclick="removeStream()">Delete</button>
@@ -81,7 +100,7 @@ BNG Trooper - {{ project.name }}
 			</div>
 			<div class="w3-container" id="options-field"></div>
 			<div id="close-project" class="w3-modal" style="display: none;">
-				<div class="w3-modal-content w3-padding w3-round">
+				<div class="w3-modal-content w3-padding w3-round w3-animate-top">
 					<h2>Close?</h2>
 					Do you really want to close the project? Any unsaved Changes will be lost.<br>
 					<button class="w3-button w3-green" onclick="doCloseProject()">Close</button>

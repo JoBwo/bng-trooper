@@ -103,6 +103,29 @@ def project_interfaces():
 	elif mode == "delete":
 		return project.remove_interface(request.form["ifid"])
 
+@app.route("/api/project/access", methods=["POST"])
+def project_access():
+	# We need to query the project id first, then we need to get the project reference
+	project = get_project_by_id(request.form["id"])
+
+	if project == None:
+		return ERROR_DIV.format("The project could not be found on the server.")
+
+	mode = request.form["mode"]
+
+	if mode == "get-interfaces":
+		return project.generate_interfaces_for_access_html()
+	elif mode == "get-access":
+		return project.generate_access_list_html()
+	elif mode == "add-access":
+		return project.add_access_protocol(request.form["interface"], request.form["type"])
+	elif mode == "get-templates":
+		return project.generate_access_template_html(request.form["access_id"])
+	elif mode == "add-template":
+		return project.add_access_template(request.form["access_id"], request.form["template"])
+	elif mode == "remove-template":
+		return project.remove_access_template(request.form["access_id"], request.form["template"])
+
 @app.route("/api/project/streams", methods=["POST"])
 def project_streams():
 	# We need to query the project id first, then we need to get the project reference
@@ -261,4 +284,4 @@ def settings():
 	return render_template("settings.html", location=LOCATION_SETTINGS)
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(host="127.0.0.1", port=5000)

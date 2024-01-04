@@ -12,19 +12,16 @@ DIV_OPTIONS_FIELD = document.getElementById("options-field")
 DIV_CLOSE_PROJECT = document.getElementById("close-project")
 TA_FORMATTED_TEXT = document.getElementById("formatted-json")
 DIV_ERROR_LIST = document.getElementById("error-list")
+DIV_NEW_ACCESS = document.getElementById("new-access")
+DIV_NEW_ACCESS_SELECTS = document.getElementById("access-selects")
+DIV_ACCESS_LIST = document.getElementById("access-list")
+DIV_ADD_ACCESS_TEMPLATE = document.getElementById("access-templates")
 
 
 let api = "/api/";
 let current_stream_delete = "";
 
-loadContent();
-
-function loadContent(){
-	// This Function gets called on complete page load and requests all the project information
-
-	// It works by calling the individual load Functions.
-	loadInterfaces();
-}
+setTimeout(loadInterfaces, 100);
 
 function toggleCards(id){
 	var cards = document.getElementsByClassName("add-interface-details");
@@ -82,7 +79,9 @@ function changePage(suffix){
 		generateTextVersion();
 	}else if(suffix == "options"){
 		loadOptions();
-	}
+	}else if(suffix == "access"){
+		loadAccess();
+	} 
 
 
 	document.getElementById(suffix).classList.remove("w3-hide")
@@ -148,6 +147,135 @@ function addNewStreamResult(response){
 
 	hideAddStream();
 	loadStreams();
+}
+
+function hideAddAccess(){
+	DIV_NEW_ACCESS.style.display = "none";
+	DIV_NEW_ACCESS_SELECTS.innerHTML = "";
+	loadAccess();
+}
+
+function showAddAccessResult(response){
+	DIV_NEW_ACCESS.style.display = "block";
+	DIV_NEW_ACCESS_SELECTS.innerHTML = response;
+}
+
+function showAddAccess(){
+	// This Function loads the available Interfaces for Access Protocols and displays a context dialog for choosing the right combination
+	fetch(api + "project/access", {
+	    method: 'POST',
+	    body: getFormData({id: project_id, mode: "get-interfaces"})
+	})
+	   .then(response => response.text())
+	   .then(response => showAddAccessResult(response))
+}
+
+function hideAddAccessTemplate(){
+	DIV_ADD_ACCESS_TEMPLATE.style.display = "none";
+	DIV_ADD_ACCESS_TEMPLATE.innerHTML = ""
+}
+
+function showAddAccessTemplateResult(response){
+	if(response == "914"){
+		placeMessage("Error", "The Access Protocol could not be found.")
+		return;
+	}
+	DIV_ADD_ACCESS_TEMPLATE.style.display = "block";
+	DIV_ADD_ACCESS_TEMPLATE.innerHTML = response
+}
+
+function showAddAccessTemplate(id){
+	fetch(api + "project/access", {
+	    method: 'POST',
+	    body: getFormData({id: project_id, access_id: id, mode: "get-templates"})
+	})
+	   .then(response => response.text())
+	   .then(response => showAddAccessTemplateResult(response))
+}
+
+function deleteAccessTemplateResult(response){
+	if(response == "914"){
+		placeMessage("Error", "The Access Protocol could not be found.")
+	}else if(response == "915"){
+		placeMessage("Error", "The Template could not be found.")
+	}
+	loadAccess();
+}
+
+function deleteAccessTemplate(access_id, template){
+	fetch(api + "project/access", {
+	    method: 'POST',
+	    body: getFormData({id: project_id, access_id: access_id, mode: "remove-template", template: template})
+	})
+	   .then(response => response.text())
+	   .then(response => deleteAccessTemplateResult(response))
+}
+
+function addAccessTemplateResult(response){
+	// Error handling
+	if(response == "914"){
+		placeMessage("Error", "The Access Protocol could not be found.")
+	}
+	hideAddAccessTemplate()
+	loadAccess();
+}
+
+function addAccessTemplate(template, access_id){
+	fetch(api + "project/access", {
+	    method: 'POST',
+	    body: getFormData({id: project_id, access_id: access_id, mode: "add-template", template: template})
+	})
+	   .then(response => response.text())
+	   .then(response => addAccessTemplateResult(response))
+}
+
+function addAccessResult(response){
+	if(response == "912"){
+		placeMessage("Error", "The interface could not be found.")
+	}else if(response == "913"){
+		placeMessage("Error", "The interface cannot be used for Access Protocols")
+	}
+	hideAddAccess();
+	loadAccess();
+}
+
+function addAccess(){
+	interface = document.getElementById("access-interface-select").value
+	type = document.getElementById("access-type-select").value
+
+	if(interface == ""){
+		placeMessage("Error", "No Interface selected.")
+		return;
+	}else if(type == ""){
+		placeMessage("Error", "No Type selected.")
+		return;
+	}
+
+	fetch(api + "project/access", {
+	    method: 'POST',
+	    body: getFormData({id: project_id, mode: "add-access", interface: interface, type: type})
+	})
+	   .then(response => response.text())
+	   .then(response => addAccessResult(response))
+}
+
+function loadAccessResult(response){
+	if(response == "911"){
+		placeMessage("Error", "We could not load any Access Protocols.")
+		return
+	}
+
+	DIV_ACCESS_LIST.innerHTML = response
+}
+
+function loadAccess(){
+	// This Function loads all Access Components from the server and places them inside the container.
+	fetch(api + "project/access", {
+	    method: 'POST',
+	    body: getFormData({id: project_id, mode: "get-access"})
+	})
+	   .then(response => response.text())
+	   .then(response => loadAccessResult(response))
 }
 
 function addNewStream(){
