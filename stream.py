@@ -163,9 +163,9 @@ class Stream:
 
 		header = """
 			<div class="w3-container">
-				<div class="w3-card w3-margin w3-padding">
+				<div class="w3-card w3-margin w3-padding w3-responsive">
 					<h3>{0}</h3>
-						<table class="w3-margin-bottom" style="width: 100%">
+						<table class="w3-margin-bottom" style="width: 100%; table-layout: fixed">
 							{1}
 						</table>
 					<button class="w3-button w3-green" onclick="showAddStreamAttribute('{2}')">Add Attribute</button>

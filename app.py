@@ -7,6 +7,7 @@ import blaster
 import os
 import threading
 import json
+import sys
 
 app = Flask(__name__)
 
@@ -22,7 +23,12 @@ LOCATION_SETTINGS = {"project": "", "settings": "w3-blue", "create": "", "home":
 LOCATION_CREATE = {"project": "", "settings": "", "create": "w3-blue", "home": ""}
 LOCATION_HOME = {"project": "", "settings": "", "create": "", "home": "w3-blue"}
 
-SAVE_FOLDER = "saves/"
+if len(sys.argv) == 2:
+	SAVE_FOLDER = sys.argv[1]
+	if not SAVE_FOLDER.endswith("/"):
+		SAVE_FOLDER = SAVE_FOLDER + "/"
+else:
+	SAVE_FOLDER = "saves/"
 
 #### DUMMY DATA HARDCODED
 #PROJECTS["abcde"] = project.Project("Test project")
@@ -125,6 +131,8 @@ def project_access():
 		return project.add_access_template(request.form["access_id"], request.form["template"])
 	elif mode == "remove-template":
 		return project.remove_access_template(request.form["access_id"], request.form["template"])
+	elif mode == "set-attribute":
+		return project.set_access_attribute_value(request.form["access_id"], request.form["attribute"], request.form["value"])
 
 @app.route("/api/project/streams", methods=["POST"])
 def project_streams():
@@ -285,3 +293,4 @@ def settings():
 
 if __name__ == "__main__":
 	app.run(host="127.0.0.1", port=5000)
+	#app.run(debug=True)

@@ -325,11 +325,11 @@ function addStreamAttribute(attribute, stream_id){
 
 function updateAttributeValueResult(response){
 	if(response == "905"){
-		placeMessage("Error", "The specified attribute does not exist for the stream");
+		placeMessage("Error", "The specified attribute does not exist for the stream.");
 	}else if(response == "908"){
 		placeMessage("Error", "The specified value is outside the value boundaries.");
 	}else if(response == "909"){
-		placeMessage("Error", "The specified value is not a valid IP-Address for the field");
+		placeMessage("Error", "The specified value is not a valid IP-Address for the field.");
 	}
 
 	loadStreams();
@@ -347,6 +347,35 @@ function updateAttributeValue(field){
 	})
 	   .then(response => response.text())
 	   .then(response => updateAttributeValueResult(response))
+}
+
+
+function updateAccessAttributeValueResult(response){
+	if(response == "915"){
+		placeMessage("Error", "The specified attribute does not exist for the Interface.");
+	}else if(response == "914"){
+		placeMessage("Error", "The specified Access Protocol Interface does not exist.");
+	}else if(response == "916"){
+		placeMessage("Error", "The specified value is outside the value boundaries.");
+	}else if(response == "917"){
+		placeMessage("Error", "The specified value is not a valid IP-Address for the field.");
+	}
+
+	loadAccess();
+}
+
+function updateAccessAttributeValue(field){
+	let value = document.getElementById(field).value
+	let parts = field.split("_");
+	let access_id = parts[0]
+	let attribute = parts[1]
+
+	fetch(api + "project/access", {
+	    method: 'POST',
+	    body: getFormData({id: project_id, access_id: access_id, mode: "set-attribute", attribute: attribute, value: value})
+	})
+	   .then(response => response.text())
+	   .then(response => updateAccessAttributeValueResult(response))
 }
 
 function changeStreamActiveResult(respone){

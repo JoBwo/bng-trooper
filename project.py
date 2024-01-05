@@ -277,6 +277,13 @@ class Project():
 
 		return "914"
 
+	def set_access_attribute_value(self, access_id, attribute, value):
+		for access in self.access:
+			if access.id == access_id:
+				return access.set_attribute_value(attribute, value)
+
+		return "914"
+
 
 	def delete_stream(self, stream_id):
 		for i in range(len(self.streams)):
@@ -329,11 +336,14 @@ class Project():
 		project = {}
 
 		# Generating the interfaces
-		interfaces = {"network": []}
+		interfaces = {"network": [], "access": []}
 		streams = []
 		# Interfaces refers to network interfaces only
 		for interface in self.interfaces:
 			interfaces["network"].append(interface.json())
+
+		for access in self.access:
+			interfaces["access"].append(access.json_interface())
 
 		for stream in self.streams:
 			if stream.active:
